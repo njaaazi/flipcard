@@ -1,0 +1,228 @@
+// Breakpoint
+//
+// Weight: 1
+//
+// Example usage:
+//
+//
+// ```
+// $breakpoints: (
+//     xxs: 0,
+//     s: 40em,  // 640px
+//     m: 48em,  // 768px
+//     l: 64em,  // 1024px
+// );
+// ```
+//
+// ```
+// .foo {
+//     color: blue;
+// 
+//     @include breakpoint(m) {
+//         color: red;
+//     }
+// }
+// ```
+// 
+// will create:
+//
+// ```
+// .foo {
+//     color: blue;
+// }
+//
+// @media (min-width: 48em) {
+//   .foo: color: red;
+// }
+// ```
+//
+// Using with the "until" argument to define max-width
+//
+// ```
+// .foo {
+// 
+//     @include breakpoint(m, until) {
+//         color: red;
+//     }
+// }
+// ```
+// 
+// will create:
+//
+// ```
+// @media (max-width: 48em) {
+//   .foo: color: red;
+// }
+// ```
+//
+// Using combined with a map
+//
+// ```
+// $foo-sizes: (
+//     'xxs': '1rem',
+//     'm': '2rem',
+//     'l': '3rem',
+// );
+// 
+// .foo {
+//     @each $foo-bp, $foo-value in $foo-sizes {
+//         @include breakpoint($foo-bp) {
+//             font-size: #{$foo-value};
+//         }
+//     }
+// }
+// ```
+//
+// will create:
+//
+// ```
+// .foo {
+//   font-size: 1rem;
+// }
+// 
+// @media (min-width: 48em) {
+//   .foo {
+//     font-size: 2rem; }
+// }
+// 
+// @media (min-width: 64em) {
+//   .foo {
+//     font-size: 3rem; }
+// }
+// ```
+//
+// Notice that no media query will be created when the value of the breakpoint is 0 (as in xxs).
+//
+// Styleguide Mixins.breakpoint
+
+/// Mixin to manage responsive breakpoints
+/// @author Hugo Giraudel
+/// @param {String} $breakpoint - Breakpoint name
+
+$breakpoints: (
+    xxs: 0,
+    xs: 20em,
+    s: 40em,
+    m: 48em,
+    l: 64em,
+    xl: 81em,
+    xxl: 90em,
+);
+
+@mixin breakpoint($breakpoint, $type: "from") {
+    $minormax: "min";
+    @if $type == "until" {
+        $minormax: "max";
+    } 
+
+    // If the key exists in the map
+    @if map-has-key($breakpoints, $breakpoint) {
+        $bp: map-get($breakpoints, $breakpoint);
+        @if unit($bp) == "em" {
+            // Prints a media query based on the value
+            @if $minormax == "max" {
+                // Remove about one pixel from the value to make sure we stay under the breakpoint value.
+                // This is to prevent normal and "until" media querys from overlapping
+                @media (#{$minormax}-width: #{$bp - .0625em}) {
+                    @content;
+                }
+            } @else {
+                @media (#{$minormax}-width: $bp) {
+                    @content;
+                }
+            }
+        } @else {
+            // Do not create media query if breakpoint is 0
+            @if $bp == 0 {
+                @content;
+            } @else {
+                @error "The entry in the breakpoints array is not properly defined as ems.";
+            }
+        }
+    } @else {
+        @if type-of($breakpoint) == "number" {
+            @if unit($breakpoint) == "em" {
+                @media (#{$minormax}-width: $breakpoint) {
+                    @content;
+                }
+            } @else {
+                @error "Only em units can be passed to the mixin when using a custom breakpoint.";
+            }
+        } @else {
+            @error "Something was passed to breakpoint(), which is not a number, or an entry in the breakpoints array.";
+        }
+    }
+}
+
+// Breakpoint loop
+//
+// Weight: 1
+//
+// Example usage:
+//
+// ```
+// @include bp-loop("flxgrid--top", (default, m, l)) {
+//     align-items: flex-start;
+// }
+// ```
+//
+// Will generate:
+//
+// ```
+// .flxgrid--top {
+//     align-items: flex-start;
+// }
+// 
+// @media (min-width: 48em) {
+//     .flxgrid--top-from-m {
+//         align-items: flex-start;
+//     }
+// }
+// 
+// @media (min-width: 64em) {
+//     .flxgrid--top-from-l {
+//         align-items: flex-start;
+//     }
+// }
+// ```
+//
+// With "until" modifier:
+//
+// ```
+//@include bp-loop("flxgrid--top", (s, xl), until) {
+//    align-items: flex-start;
+//}
+// ```
+//
+// Will generate:
+//
+// ```
+// @media (max-width: 39.9375em) {
+//     .flxgrid--top-until-s {
+//         align-items: flex-start;
+//     }
+// }
+// 
+// @media (max-width: 80.9375em) {
+//     .flxgrid--top-until-xl {
+//         align-items: flex-start; 
+//     }
+// }
+// ```
+//
+// Styleguide Mixins.breakpoint.bploop
+@mixin bp-loop($class, $breakpoints, $type: "from") {
+    @each $bp in $breakpoints {
+        @if $bp == "default" {
+            .#{$class} {
+                @content;
+            }
+        } @else {
+            @include breakpoint($bp, $type) {
+                .#{$class}-#{$type}-#{$bp} {
+                    @content;
+                }
+            }
+        }
+    }
+}
