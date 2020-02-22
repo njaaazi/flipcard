@@ -1,82 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Flip Card</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Flip Card</title>
 
-	<link rel="stylesheet" href="styles/main.css">
-</head>
-<body>
-	
-<div class="content-wrapper">
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body>
+    <div class="content-wrapper">
+      <div class="flip_card__container">
+        <div class="container">
+          <div class="card">
+            <div class="face face1"></div>
+            <div class="face face2"></div>
+          </div>
 
-	<div class="flip_card__container">
-		
-		<div class="container">
+          <ul class="store">
+            <li>
+              <div class="content content1">
+                <h2>FIRST CONTENT</h2>
+              </div>
+            </li>
 
-		    <div class="card">
-		        <div  class="face face1"></div>
-		        <div  class="face face2"></div>
-		    </div>
+            <li>
+              <div class="content content2">
+                <h2>SECOND CONTENT</h2>
+              </div>
+            </li>
 
-		    <ul class="store">
-				
-				<li>
-		            <div class="content content1">
+            <li>
+              <div class="content content3">
+                <h2>THIRD CONTENT</h2>
+              </div>
+            </li>
 
-						<h2>FIRST CONTENT</h2>
+            <li>
+              <div class="content content4">
+                <h2>FOURTH CONTENT</h2>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-		        	</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-		        </li>
-
-		        <li>
-		            <div class="content content2">
-
-		        		<h2>SECOND CONTENT</h2>
-
-		        	</div>
-		        </li>
-
-
-
-		        <li>
-		            <div class="content content3">
-						
-						<h2>THIRD CONTENT</h2>
-
-		            </div>
-
-		        </li>
-
-		        <li>
-		            <div class="content content4">
-						
-						<h2>FOURTH CONTENT</h2>
-						
-					</div>
-		        </li>
-
-
-		    </ul>
-
-
-		</div>
-
-	</div>
-
-</div>
-		    
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<script src="js/flip.js"></script>
-
-
-
-</body>
+    <script src="js/flip.js"></script>
+  </body>
 </html>
